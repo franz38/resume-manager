@@ -1,0 +1,35 @@
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend_c
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      # - ./app/node_modules
+    stdin_open: true
+    tty: true
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./backend/.env
+    ports:
+      - 54321:5432
+  backend:
+    build: ./backend
+    container_name: backend_c
+    restart: always
+    ports:
+      - '8000:8000'
+    expose:
+      - 8000
+    volumes:
+      - ./backend/app:/app
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
