@@ -1,6 +1,7 @@
-from pydantic import BaseModel, typing
+from pydantic import BaseModel, typing, Json
 from typing import Annotated, List, Dict
 from fastapi import UploadFile, File
+from typing import Any
 
 
 
@@ -35,12 +36,11 @@ class RootMinimal(RootBase):
 
 class RootComplete(RootMinimal):
     versions: List[Version]
-    folderstructure: Dict
+    folderstructure: str
     files: List[bytes]
 
 
 class RootCreate(RootBase):        
-    folderstructure: Dict
-    
+    folderstructure: str    
 
     
