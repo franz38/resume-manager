@@ -1,39 +1,35 @@
-import React from "react";
-import { Add, InsertDriveFile } from "@mui/icons-material";
-import { Dialog, DialogTitle, DialogContent, Button, Grid } from "@mui/material";
-import { RootMinimal } from "../api";
-
+import { AddIcon, AttachmentIcon } from '@chakra-ui/icons';
+import { HStack, Modal, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
+import { Root } from "../api";
 
 interface ResumeSelectorProps {
-    resumes: RootMinimal[];
+    resumes: Root[];
     openCreationEditor: () => void;
-    resumeClick: (resume: RootMinimal) => void;
+    resumeClick: (resume: Root) => void;
+    isOpen: boolean;
 }
 
 export const ResumeSelector = (props: ResumeSelectorProps) => {
 
-    return <>{props.resumes && <Dialog open>
-        <DialogTitle>Select resume</DialogTitle>
+    // const { isOpen, onOpen, onClose } = useDisclosure({isOpen: props.open})
 
-        <DialogContent>
-
-            <Grid container spacing={1}>
-                {props.resumes?.map(resume => 
-                    <Grid item xs={4} key={resume.id}>
-                        <div onClick={(e) => props.resumeClick(resume)}>
-                            <InsertDriveFile />
-                            <p>{resume.name}</p>
-                        </div>
-                    </Grid>
+    return <>{props.resumes && <Modal isOpen={props.isOpen} onClose={() => { }}>
+        {/* <DialogTitle>Select resume</DialogTitle> */}
+        <ModalOverlay />
+        <ModalContent>
+            <ModalHeader>Select resume</ModalHeader>
+            <VStack>
+                {props.resumes?.map(resume =>
+                    <HStack onClick={(e) => props.resumeClick(resume)}>
+                        <AttachmentIcon />
+                        <p>{resume.name ?? resume.id}</p>
+                    </HStack>
                 )}
-                <Grid item xs={4}>
-                    <div onClick={(e) => props.openCreationEditor()}>
-                        <Add />
-                        <p>{"Add new"}</p>
-                    </div>
-                </Grid>
-            </Grid>
-
-        </DialogContent>
-    </Dialog>}</>
+                <HStack w='100px' onClick={(e) => props.openCreationEditor()}>
+                    <AddIcon />
+                    <p>{"Add new"}</p>
+                </HStack>
+            </VStack>
+        </ModalContent>
+    </Modal>}</>
 }
