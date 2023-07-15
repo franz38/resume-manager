@@ -1,5 +1,5 @@
 import { AddIcon, AttachmentIcon } from '@chakra-ui/icons';
-import { HStack, Modal, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
+import { Button, Modal, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
 import { Root } from "../api";
 
 interface ResumeSelectorProps {
@@ -17,18 +17,26 @@ export const ResumeSelector = (props: ResumeSelectorProps) => {
         {/* <DialogTitle>Select resume</DialogTitle> */}
         <ModalOverlay />
         <ModalContent>
-            <ModalHeader>Select resume</ModalHeader>
-            <VStack>
+            <ModalHeader alignSelf={"center"}>Select resume</ModalHeader>
+            <VStack spacing={"16px"} padding={"16px"}>
                 {props.resumes?.map(resume =>
-                    <HStack onClick={(e) => props.resumeClick(resume)}>
-                        <AttachmentIcon />
-                        <p>{resume.name ?? resume.id}</p>
-                    </HStack>
+                    <Button
+                        variant={"ghost"}
+                        colorScheme={"gray"}
+                        leftIcon={<AttachmentIcon />}
+                        w={"100%"}
+                        width={"100%"}
+                        justifyContent={"start"}
+                        onClick={() => { props.resumeClick(resume) }}
+                        key={resume.id}
+                    >{resume.name ?? resume.id}</Button>
                 )}
-                <HStack w='100px' onClick={(e) => props.openCreationEditor()}>
-                    <AddIcon />
-                    <p>{"Add new"}</p>
-                </HStack>
+                <Button
+                    colorScheme={"blue"}
+                    leftIcon={<AddIcon />}
+                    width={"100%"}
+                    onClick={(e) => props.openCreationEditor()}
+                >Add a resume</Button>
             </VStack>
         </ModalContent>
     </Modal>}</>

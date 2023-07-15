@@ -2,8 +2,9 @@ import * as d3 from 'd3';
 import { useEffect, useRef, useState } from "react";
 import { OpenAPI, Root, RootService, Version, VersionsService } from "../api";
 import { BuildVersionTree, VersionTree } from "../types/versionTree";
-import { EditorMode, EditorStepper } from "./EditorStepper";
+import { EditorMode, VersionEditor } from "./VersionEditor";
 import { ResumeSelector } from "./ResumeSelector";
+import { combineVersions } from '../versionControl/combineVersions';
 
 OpenAPI.BASE = 'http://localhost:8000';
 
@@ -146,7 +147,8 @@ export const Canvas = () => {
 
 
     const fetchResume = async (resumeBase: Root) => {
-        const versions = await VersionsService.getVersionApiV1VersionsResumeIdGet(resumeBase.id)
+        let versions = await VersionsService.getVersionApiV1VersionsResumeIdGet(resumeBase.id)
+        versions = combineVersions(versions)
         setSelectedResume(resumeBase)
         setVersions(versions)
     }
@@ -158,11 +160,22 @@ export const Canvas = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedResume) {
-            // initChart()
-            drawChart()
+        drawChart()
+    }, [versions])
+
+    const closeEditor = (createdVersion: Version | undefined) => {
+
+        if (!createdVersion) {
+            setEditPanel(EditorMode.HIDDEN)
+            return
         }
-    }, [selectedResume])
+
+        if (editPanel == EditorMode.CREATING)
+            setVersions([createdVersion])
+        else if (editPanel == EditorMode.EDITING)
+            setVersions([...versions, createdVersion])
+        setEditPanel(EditorMode.HIDDEN)
+    }
 
     return <>
 
@@ -180,12 +193,9 @@ export const Canvas = () => {
             </svg>
         </div>
 
-        <EditorStepper
+        <VersionEditor
             open={editPanel != EditorMode.HIDDEN}
-            // fullWidth={true}
-            // maxWidth={"md"}
-            // onClose={e => setEditPanel(EditorMode.HIDDEN)}
-            addVersion={v => setVersions([...versions, v])}
+            addVersion={v => closeEditor(v)}
             resume={selectedResume}
             mode={editPanel}
             parentVersion={selectedVersion}

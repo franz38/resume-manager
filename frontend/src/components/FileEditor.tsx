@@ -1,10 +1,10 @@
 import { Editor } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import { useEffect, useState } from "react";
-import { Box, Button, Container, HStack, UnorderedList, VStack, Text, Flex } from "@chakra-ui/react";
+import { Box, Button, Container, HStack, UnorderedList, VStack, Text, Flex, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody, PopoverFooter, Stack, Input, FormControl, FormLabel } from "@chakra-ui/react";
 import Dropzone from 'react-dropzone';
-import { MyFile } from "../types/delta";
-import { CopyIcon } from "@chakra-ui/icons";
+import { AddIcon, CopyIcon } from "@chakra-ui/icons";
+import { MyFile } from "../versionControl/types";
 
 
 export enum NodeType {
@@ -34,10 +34,11 @@ interface ResumeEditorProps {
 
 
 
-export const ResumeEditor = (props: ResumeEditorProps) => {
+export const FileEditor = (props: ResumeEditorProps) => {
 
     const [cacheValue, setCacheValue] = useState<string>();
     const [key, setKey] = useState<number>(0);
+    const [newfileName, setnewfileName] = useState<string>("");
 
     useEffect(() => {
         if (props.fileOpen) {
@@ -51,7 +52,7 @@ export const ResumeEditor = (props: ResumeEditorProps) => {
         setCacheValue(value)
     }
 
-    const fileSwitch = async (fileToOpen: MyFile) => {
+    const fileSwitch = async (fileToOpen: FileMeta) => {
         if (props.fileOpen == fileToOpen)
             return
 
@@ -62,21 +63,20 @@ export const ResumeEditor = (props: ResumeEditorProps) => {
         props.openFile(fileToOpen)
         // setCacheValue(await fileToOpen.data.text())
         // setOpenFile(fileToOpen)
-        setKey(key + 1)
     }
 
     const renderFolder = (files: FileMeta[]): JSX.Element => {
         return <>
-            {files?.map(el => <Box><Button
+            {files?.map(el => <Button
                 variant={"ghost"}
                 colorScheme={"gray"}
                 leftIcon={<CopyIcon />}
                 w={"100%"}
                 width={"100%"}
                 justifyContent={"start"}
-                onClick={() => props.openFile(el)}
+                onClick={() => fileSwitch(el)}
                 key={el.filename + el.path}
-            >{el.filename}</Button></Box>
+            >{el.filename}</Button>
             )
             }
         </>
@@ -87,6 +87,35 @@ export const ResumeEditor = (props: ResumeEditorProps) => {
         <HStack spacing={"20px"} align={"flex-start"}>
             <Flex direction={"column"} style={{ paddingTop: "1rem" }} w="250px" height={"100%"}>
                 {renderFolder(props.fileList)}
+
+                <Popover>
+                    <PopoverTrigger>
+                        <Button
+                            variant={"ghost"}
+                            colorScheme={"gray"}
+                            leftIcon={<AddIcon />}
+                            w={"100%"}
+                            width={"100%"}
+                            justifyContent={"start"}
+                            onClick={() => { }}
+                        >{"Add file"}</Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <PopoverBody>
+                            <Stack spacing={4}>
+                                <FormControl>
+                                    <FormLabel>filename</FormLabel>
+                                    <Input value={newfileName} onChange={e => setnewfileName(e.target.value)}></Input>
+                                </FormControl>
+                                <FormControl>
+                                    <Button onClick={(e) => { props.applyChange("", newfileName, ""); setnewfileName("") }}>Add</Button>
+                                </FormControl>
+                            </Stack>
+                        </PopoverBody>
+                    </PopoverContent>
+                </Popover>
+
+
 
                 <Box flexGrow={1} style={{ padding: "0px 1rem" }} justifyContent={"stretch"}>
                     <Dropzone onDrop={acceptedFiles => {
