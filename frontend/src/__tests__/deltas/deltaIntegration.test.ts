@@ -1,4 +1,5 @@
-import { applyDelta, getDelta } from "../../types/delta";
+import { applyDelta } from "../../versionControl/applyDelta";
+import { getDelta } from "../../versionControl/getDelta";
 
 describe("diff", () => {
   it("no changes", () => {
