@@ -21,12 +21,52 @@ describe("diff", () => {
     expect(result).toEqual(expectedDiff);
   });
 
+  it("add a line at the end", () => {
+    const initialContent = "aaaa\nbbbb\ncccc\ndddd\neee";
+    const subtractions = {};
+    const additions = { "5": "++++" };
+
+    const expectedDiff = "aaaa\nbbbb\ncccc\ndddd\neee\n++++";
+    const result = applyDelta(initialContent, subtractions, additions);
+    expect(result).toEqual(expectedDiff);
+  });
+
+  it("add n lines at the end (I)", () => {
+    const initialContent = "aaaa\nbbbb\ncccc\ndddd\neee";
+    const subtractions = {};
+    const additions = { "5": "++++", "6": "====", "7": "----" };
+
+    const expectedDiff = "aaaa\nbbbb\ncccc\ndddd\neee\n++++\n====\n----";
+    const result = applyDelta(initialContent, subtractions, additions);
+    expect(result).toEqual(expectedDiff);
+  });
+
+  it("add n lines at the end (II)", () => {
+    const initialContent = "aaaa\nbbbb\ncccc\ndddd\neee";
+    const subtractions = {};
+    const additions = { "5": "++++", "6": "====", "8": "----" };
+
+    const expectedDiff = "aaaa\nbbbb\ncccc\ndddd\neee\n++++\n====\n\n----";
+    const result = applyDelta(initialContent, subtractions, additions);
+    expect(result).toEqual(expectedDiff);
+  });
+
   it("add a line (over the limit)", () => {
     const initialContent = "aaaa\nbbbb\ncccc\ndddd\neee";
     const subtractions = {};
     const additions = { "8": "1111" };
 
     const expectedDiff = "aaaa\nbbbb\ncccc\ndddd\neee\n\n\n\n1111";
+    const result = applyDelta(initialContent, subtractions, additions);
+    expect(result).toEqual(expectedDiff);
+  });
+
+  it("add n line (over the limit)", () => {
+    const initialContent = "aaaa\nbbbb\ncccc\ndddd\neee";
+    const subtractions = {};
+    const additions = { "8": "1111", "9": "++++", "10": "====" };
+
+    const expectedDiff = "aaaa\nbbbb\ncccc\ndddd\neee\n\n\n\n1111\n++++\n====";
     const result = applyDelta(initialContent, subtractions, additions);
     expect(result).toEqual(expectedDiff);
   });

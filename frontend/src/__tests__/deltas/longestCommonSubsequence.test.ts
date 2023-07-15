@@ -1,4 +1,4 @@
-import { diff } from "../../types/delta";
+import { longestCommonSubsequenceHandler } from "../../versionControl/longestCommonSubsequence";
 
 describe("diff", () => {
   it("should return the correct difference for two strings", () => {
@@ -6,7 +6,7 @@ describe("diff", () => {
     const str2 = "aaaa\nbbbb\ncccc\nxyz\neee'";
 
     const expectedDiff = [[3], [3]];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -18,7 +18,7 @@ describe("diff", () => {
       [0, 3],
       [0, 3],
     ];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -27,7 +27,7 @@ describe("diff", () => {
     const str2 = "zzzz\nbbbb\ncccc\nxyz\neee'";
 
     const expectedDiff = [[2], [0, 3]];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -36,7 +36,7 @@ describe("diff", () => {
     const str2 = "aaa\nxyz'";
 
     const expectedDiff = [[1, 2, 3, 4], [1]];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -45,7 +45,7 @@ describe("diff", () => {
     const str2 = "aaa\n\n\n\ncccc\nxyz\neee'";
 
     const expectedDiff = [[5], [5]];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -57,7 +57,7 @@ describe("diff", () => {
       [3, 5],
       [1, 5],
     ];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 
@@ -69,7 +69,7 @@ describe("diff", () => {
       [1, 2, 4],
       [1, 2, 4, 5],
     ];
-    const result = diff(str1, str2);
+    const result = longestCommonSubsequenceHandler(str1, str2);
     expect(result).toEqual(expectedDiff);
   });
 });

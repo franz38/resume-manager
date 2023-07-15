@@ -151,6 +151,20 @@ describe("diff", () => {
 
     const delta = getDelta(contentA, contentB);
 
+    const expectedSubtractions = {};
+    const expectedAdditions = {
+      "2": "48",
+      "3": "72",
+      "4": "38",
+      "5": "69",
+      "14": "30",
+      "15": "16",
+      "16": "83",
+    };
+
+    expect(delta.added).toEqual(expectedAdditions);
+    expect(delta.removed).toEqual(expectedSubtractions);
+
     const rebuildFile = applyDelta(contentA, delta.removed, delta.added);
 
     expect(contentB).toEqual(rebuildFile);
